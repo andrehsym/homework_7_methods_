@@ -1,7 +1,7 @@
 package sky.pro.java.course1;
 
+import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class Main {
 
@@ -10,35 +10,25 @@ public class Main {
         //ЗАДАЧА 1
         System.out.println("ЗАДАЧА 1");
 
-//        Scanner yearRandom = new Scanner(System.in); // попробовал приспособить класс Scanner
-        // с ним задача вышла интерактивнее
+
         System.out.println("Введите год для проверки и нажмите Enter");
-//        int year = yearRandom.nextInt();
-        int year = 2020;
-        checkYear(year);
+
+        int year = 2001;
+        checkYears(year);
 
         System.out.println("");
 
         //ЗАДАЧА 2
         System.out.println("ЗАДАЧА 2");
 
-        int typeOfOS = 0;
-        int yearOfDevice = 2005;
-        checkDevice(typeOfOS, yearOfDevice);
+        printRecommendedAppVersion(0, 2021);
 
         System.out.println("");
 
         //ЗАДАЧА 3
         System.out.println("ЗАДАЧА 3");
 
-        int deliveryDistance = 67;
-        int deliveryDays = 1;
-
-        if (deliveryDistance < 20) {
-            System.out.println("Потребуется дней: " + deliveryDays);
-        } else {
-            deliveryDays = deliveryTime(deliveryDistance);
-        }
+        System.out.println("Количество дней доставки: " + calculateDeliveryDays(23));
 
         System.out.println("");
 
@@ -54,14 +44,14 @@ public class Main {
         //ЗАДАЧА 5
         System.out.println("ЗАДАЧА 5");
 
-        int [] massive = {3, 2, 1, 6, 5};
+        int[] massive = {3, 2, 1, 6, 5};
         reversMassive(massive);
 
         System.out.println("");
     }
 
     //МЕТОД К ЗАДАЧЕ 5
-    public static void reversMassive(int [] subMassive) {
+    public static void reversMassive(int[] subMassive) {
         for (int i = 0; i < subMassive.length / 2; i++) {
             int tmp = subMassive[i];
             subMassive[i] = subMassive[subMassive.length - i - 1];
@@ -74,61 +64,68 @@ public class Main {
     public static void textValidator(String name) {
 
         char[] lettersToSymbols = name.toCharArray();
-        for (int i = 1; i < lettersToSymbols.length; i++) {
-            if (lettersToSymbols[i] == lettersToSymbols[i - 1]) {
-                System.out.println("Символ " + lettersToSymbols[i] + " задублирован");
-                break;
-            } else if (i == lettersToSymbols.length - 1) {
-                System.out.println("Дублей не найдено");
+        char prevChar = Character.MAX_VALUE;
+        for (char letter : lettersToSymbols) {
+            if (letter == prevChar) {
+                System.out.println("Символ " + letter + " задублирован");
+                return;
             }
+            prevChar = letter;
         }
+        System.out.println("Дублей не найдено");
     }
 
-    //МЕТОД К ЗАДАЧЕ 3
-    public static int deliveryTime(int calculating) {
+        //МЕТОД К ЗАДАЧЕ 3
+        public static int calculateDeliveryDays ( int deliveryDistance){
+            int result = 1;
+            if (deliveryDistance > 20) {
+                result++;
+            }
+            if (deliveryDistance > 60) {
+                result++;
+            }
+            return result;
+        }
 
-        int deliveryTime = 0;
-        deliveryTime = ((calculating - 20) / 40) + 2;
-            System.out.println("Потребуется дней: " + deliveryTime);
-        return deliveryTime;
-    }
+        //МЕТОДЫ К ЗАДАЧЕ 2
+        public static void printRecommendedAppVersion ( int clientOS, int deviceYear){
 
-    //МЕТОД К ЗАДАЧЕ 2
-    public static void checkDevice (int typeOfOS, int yearOfDevice) {
-
-        if (typeOfOS == 0) {
-            if (yearOfDevice >= 2015) {
-                System.out.println("Установите версию приложения для iOS по ссылке");
+            boolean deviceIsOld = checkYear(deviceYear);
+            StringBuilder messageBuilder = new StringBuilder();
+            messageBuilder.append("Установите ");
+            if (deviceIsOld) {
+                messageBuilder.append("lite ");
+            }
+            messageBuilder.append("версию для ");
+            if (clientOS == 0) {
+                messageBuilder.append("iOS");
             } else {
-                System.out.println("Установите облегченную версию приложения для iOS по ссылке");
+                messageBuilder.append("Android");
             }
-        } else if (typeOfOS != 0) {
-            if (yearOfDevice >= 2015) {
-                System.out.println("Установите версию приложения для Android по ссылке");
+
+            System.out.println(messageBuilder);
+        }
+
+        public static boolean checkYear(int yearOfDevice) {
+            int currentYear = LocalDate.now().getYear();
+            return yearOfDevice < currentYear;
+        }
+
+        //МЕТОД К ЗАДАЧЕ 1
+        public static void checkYears ( int i){
+
+            int leapYear1 = i % 4;
+            int leapYear2 = i % 400;
+            int leapYear3 = i % 100;
+
+            boolean checkedLeapYear1 = leapYear1 == 0;
+            boolean cheakedLeapYear2 = leapYear2 == 0;
+            boolean checkedLeapYear3 = leapYear3 != 0;
+
+            if ((checkedLeapYear1 && checkedLeapYear3) || cheakedLeapYear2) {
+                System.out.println(i + " - високосный год");
             } else {
-                System.out.println("Установите облегченную версию приложения для Android по ссылке");
+                System.out.println(i + " - не високосный год");
             }
         }
-    }
-
-    //МЕТОД К ЗАДАЧЕ 1
-    public static void checkYear(int i) {
-
-        int leapYear1 = i % 4;
-        int leapYear2 = i % 400;
-        int leapYear3 = i % 100;
-
-        boolean checkedLeapYear1 = leapYear1 == 0;
-        boolean cheakedLeapYear2 = leapYear2 == 0;
-        boolean checkedLeapYear3 = leapYear3 != 0;
-
-        if (checkedLeapYear1 && checkedLeapYear3) {
-            System.out.println(i + " - високосный год");
-        } else if (cheakedLeapYear2) {
-            System.out.println(i + " - високосный год");
-        } else {
-            System.out.println(i + " - не високосный год");
-        }
-    }
-
 }
